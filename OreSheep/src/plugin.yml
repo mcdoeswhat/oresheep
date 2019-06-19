@@ -1,0 +1,10 @@
+name: OreSheep
+version: 1.0.0
+main: me.albert.oresheep.Main
+author: Albert
+api-version: 1.13
+commands:
+  oresheep:
+    usage: /oresheep
+    description: main command
+    permission: oresheep.use

@@ -1,0 +1,27 @@
+Sheep:
+  diamond_sheep:
+    name: "&b&lDiamond Sheep"
+    #Dye color list https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/DyeColor.html
+    color: LIGHT_BLUE
+    drop-on-shear: diamond
+    drop-amount: 1-3
+  coal_sheep:
+    name: "&8&lCoal Sheep"
+    color: black
+    drop-on-shear: coal
+    drop-amount: 1-3
+  iron_sheep:
+    name: "&f&lIron Sheep"
+    color: white
+    drop-on-shear: iron_ingot
+    drop-amount: 1-3
+  gold_sheep:
+    name: "&6&lGold Sheep"
+    color: yellow
+    drop-on-shear: gold_ingot
+    drop-amount: 1-3
+  emerald_sheep:
+    name: "&2&lEmerald Sheep"
+    color: green
+    drop-on-shear: emerald
+    drop-amount: 1-3
