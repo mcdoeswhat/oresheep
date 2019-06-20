@@ -50,6 +50,7 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
         this.saveDefaultConfig();
         this.config = YamlConfiguration.loadConfiguration(this.file);
         getCommand("oresheep").setTabCompleter(this::onTabComplete);
+        MetricsLite ml = new MetricsLite(this);
         for (String key : this.getConfig().getConfigurationSection("Sheep").getKeys(false)) {
             sheeps.add(ChatColor.translateAlternateColorCodes('&',key));
             sheepnames.add(ChatColor.translateAlternateColorCodes('&',this.getConfig().getString(
