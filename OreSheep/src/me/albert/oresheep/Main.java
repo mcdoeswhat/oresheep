@@ -85,9 +85,9 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
             } else
                 if (args[0].equalsIgnoreCase("give")) {
                 if (args.length == 4) {
-                    if (Bukkit.getPlayer(args[1]) != null){
-                        if (Integer.parseInt(args[3]) > 0){
-                            Player p =Bukkit.getPlayer(args[1]);
+                    if (isNumeric(args[3])) {
+                        if (Bukkit.getPlayer(args[1]) != null) {
+                            Player p = Bukkit.getPlayer(args[1]);
                             int amount = Integer.parseInt(args[3]);
                             if (sheeps.contains(args[2])) {
                                 String name = ChatColor.translateAlternateColorCodes('&',
@@ -95,19 +95,20 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
                                 ItemStack egg = this.getEgg(args[2]);
                                 egg.setAmount(amount);
                                 p.getInventory().addItem(egg);
-                                String message = egg_get.replace("%amount%",String.valueOf(amount)).replace("%sheep%",name);
-                                String message_sender = egg_give.replace("%amount%",String.valueOf(amount)).replace("%sheep%",name)
-                                        .replace("%player%",p.getName());
-                                p.sendMessage(prefix+message);
-                                sender.sendMessage(prefix+message_sender);
+                                String message = egg_get.replace("%amount%", String.valueOf(amount)).replace("%sheep%", name);
+                                String message_sender = egg_give.replace("%amount%", String.valueOf(amount)).replace("%sheep%", name)
+                                        .replace("%player%", p.getName());
+                                p.sendMessage(prefix + message);
+                                sender.sendMessage(prefix + message_sender);
                             } else {
-                                sender.sendMessage(prefix+sheep_not_found);
+                                sender.sendMessage(prefix + sheep_not_found);
                             }
 
+                        } else {
+                            sender.sendMessage(prefix + player_not_found);
                         }
-
                     } else{
-                        sender.sendMessage(prefix+player_not_found);
+                        sender.sendMessage(prefix+invalid_usage);
                     }
 
                 } else {
@@ -150,6 +151,16 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
 
         return true;
     }
+    public boolean isNumeric(String str) {
+        try{
+           Integer.parseInt(str);
+           return true;
+        }
+        catch(NumberFormatException e) {
+        return false;
+        }
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender cs, Command command, String args2, String[] args) {
         if(cs instanceof Player) {
