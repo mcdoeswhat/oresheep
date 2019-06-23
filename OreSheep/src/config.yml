@@ -1,3 +1,12 @@
+Messages:
+  prefix: "&7[&bOreSheep&7]&r "
+  egg_give: "&aYou gave %player% &6&l%amount%X %sheep% &aspawn egg"
+  egg_get: "&aYou received &6&l%amount%X %sheep% &aspawn egg"
+  config_reload: "&a&lConfig reloaded"
+  sheep_not_found: "&cSheep not Found!"
+  player_not_found: "&a&lNo player found with that name"
+  player_only: "&cThis command is only for players!"
+  invalid_usage: "&cIncorrect usage!"
 Sheep:
   diamond_sheep:
     name: "&b&lDiamond Sheep"

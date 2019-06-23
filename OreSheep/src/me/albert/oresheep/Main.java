@@ -43,6 +43,14 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
     }
 
     private static int version;
+    private String prefix = color(this.getConfig().getString("Messages.prefix"));
+    private String egg_give = color(this.getConfig().getString("Messages.egg_give"));
+    private String egg_get = color(this.getConfig().getString("Messages.egg_get"));
+    private String config_reload = color(this.getConfig().getString("Messages.config_reload"));
+    private String sheep_not_found = color(this.getConfig().getString("Messages.sheep_not_found"));
+    private String player_not_found = color(this.getConfig().getString("Messages.player_not_found"));
+    private String player_only = color(this.getConfig().getString("Messages.player_only"));
+    private String invalid_usage = color(this.getConfig().getString("Messages.invalid_usage"));
     @Override
     public void onEnable(){
         cs.sendMessage("§b[OreSheep] Loaded");
@@ -63,10 +71,10 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
             if (args[0].equalsIgnoreCase("reload")) {
                 if (!new File(this.getDataFolder(), "config.yml").exists()) {
                     saveResource("config.yml", true);
-                    sender.sendMessage("§b[OreSheep] config regenerated");
+                    sender.sendMessage(prefix+config_reload);
                 } else
                     this.reloadConfig();
-                sender.sendMessage("§b[OreSheep] config reloaded");
+                sender.sendMessage(prefix+config_reload);
                 sheeps.clear();
                 sheepnames.clear();
                 for (String key : this.getConfig().getConfigurationSection("Sheep").getKeys(false)) {
@@ -75,65 +83,88 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
                             "Sheep."+ key+".name")));
                 }
             } else
-            if (args[0].equalsIgnoreCase("get")) {
-                if (sender instanceof Player) {
-                    Player p = (Player)sender;
-                    if (args.length == 2) {
-                        if (sheeps.contains(args[1])) {
-                            ItemStack egg = null;
-                            if (version <= 12) {
-                                try {
-                                    egg = createSpawnEgg("Sheep");
-                                } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
-                                } catch (InvocationTargetException e) {
-                                    e.printStackTrace();
-                                } catch (NoSuchMethodException e) {
-                                    e.printStackTrace();
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (InstantiationException e) {
-                                    e.printStackTrace();
-                                }
+                if (args[0].equalsIgnoreCase("give")) {
+                if (args.length == 4) {
+                    if (Bukkit.getPlayer(args[1]) != null){
+                        if (Integer.parseInt(args[3]) > 0){
+                            Player p =Bukkit.getPlayer(args[1]);
+                            int amount = Integer.parseInt(args[3]);
+                            if (sheeps.contains(args[2])) {
+                                String name = ChatColor.translateAlternateColorCodes('&',
+                                        this.getConfig().getString("Sheep." + args[2] + ".name"));
+                                ItemStack egg = this.getEgg(args[2]);
+                                egg.setAmount(amount);
+                                p.getInventory().addItem(egg);
+                                String message = egg_get.replace("%amount%",String.valueOf(amount)).replace("%sheep%",name);
+                                String message_sender = egg_give.replace("%amount%",String.valueOf(amount)).replace("%sheep%",name)
+                                        .replace("%player%",p.getName());
+                                p.sendMessage(prefix+message);
+                                sender.sendMessage(prefix+message_sender);
                             } else {
-                                egg = new ItemStack(Material.valueOf("SHEEP_SPAWN_EGG"));
+                                sender.sendMessage(prefix+sheep_not_found);
                             }
-                            ItemMeta meta = egg.getItemMeta();
-                            String name = ChatColor.translateAlternateColorCodes('&',
-                                    this.getConfig().getString("Sheep."+args[1]+".name"));
-                            meta.setDisplayName(name);
-                            egg.setItemMeta(meta);
-                            p.getInventory().addItem(egg);
-                            p.sendMessage("§b[OreSheep] §aYou received 1x "+name);
-                        } else {
-                            sender.sendMessage("§b[OreSheep] §cSheep not exist!");
+
                         }
 
-                    } else {
-                        sender.sendMessage(sheeps.toString());
+                    } else{
+                        sender.sendMessage(prefix+player_not_found);
                     }
+
                 } else {
-                    sender.sendMessage("§cPlayer only!");
+                    sender.sendMessage(prefix+invalid_usage);
                 }
 
-            } else {
-                sender.sendMessage("§b[OreSheep] §cIncorrect usage");
+
             }
+            else if (sender instanceof Player) {
+                    Player p = (Player)sender;
+                    if (args[0].equalsIgnoreCase("get")) {
+                        if (args.length == 2) {
+                            if (sheeps.contains(args[1])) {
+                                String name = ChatColor.translateAlternateColorCodes('&',
+                                        this.getConfig().getString("Sheep." + args[1] + ".name"));
+                                p.getInventory().addItem(this.getEgg(args[1]));
+                                String message = egg_give.replace("%amount%","1").replace("%sheep%",name);
+                                p.sendMessage(prefix+message);
+                            } else {
+                                sender.sendMessage(prefix+sheep_not_found);
+                            }
+
+                        } else {
+                            sender.sendMessage(sheeps.toString());
+                        }
+                    }
+                    else {
+                        sender.sendMessage(prefix+invalid_usage);
+                    }
+                } else {
+                    sender.sendMessage(prefix+player_only);
+                }
+
+
         } else{
             sender.sendMessage("§b/oresheep get <sheep>");
             sender.sendMessage("§b/oresheep reload");
+            sender.sendMessage("§b/oresheep give <player> <amount>");
         }
 
         return true;
     }
     @Override
     public List<String> onTabComplete(CommandSender cs, Command command, String args2, String[] args) {
-        if(!(cs instanceof Player))return null;
-        Player p = (Player)cs;
-
-        if(!p.hasPermission("oresheep.use")) return null;
+        if(cs instanceof Player) {
+            Player p = (Player) cs;
+            if(!p.hasPermission("oresheep.use")) return null;
+        } else
         if(args.length == 2){
-            return sheeps;
+            if (args[0].equalsIgnoreCase("get")) {
+                return sheeps;
+            }
+        }if(args.length == 3){
+            if (args[0].equalsIgnoreCase("give")) {
+                return sheeps;
+            }
+
         }
         return null;
     }
@@ -165,6 +196,24 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
             }
             return  sheepcfg;
 
+        }
+        public ItemStack getEgg(String sheep){
+            ItemStack egg = null;
+            if (version <= 12) {
+                try {
+                    egg = createSpawnEgg("Sheep");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                egg = new ItemStack(Material.valueOf("SHEEP_SPAWN_EGG"));
+            }
+            ItemMeta meta = egg.getItemMeta();
+            String name = ChatColor.translateAlternateColorCodes('&',
+                    this.getConfig().getString("Sheep."+sheep+".name"));
+            meta.setDisplayName(name);
+            egg.setItemMeta(meta);
+            return egg;
         }
 
         public ItemStack dropOnShear(String key){
@@ -245,6 +294,10 @@ public class Main extends JavaPlugin implements Listener, TabCompleter {
 
     private Class<?> getCraftbukkitClass(String className) throws ClassNotFoundException {
         return Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + className);
+    }
+    public String color(String message){
+        return ChatColor.translateAlternateColorCodes('&',message);
+
     }
 
     }
