@@ -49,6 +49,10 @@ public class Main extends JavaPlugin {
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         switch (args.length){
+            case 0:
+                sender.sendMessage(Utils.color("&b/oresheep get <sheep>"));
+                sender.sendMessage(Utils.color("&b/oresheep give <player> <sheep> [amount]"));
+                return true;
             case 1:
                 if (args[0].equalsIgnoreCase("reload")) {
                     if (!new File(this.getDataFolder(), "config.yml").exists()) {
