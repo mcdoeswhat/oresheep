@@ -46,8 +46,7 @@ public class Commands implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("get") && sender instanceof Player) {
                     Player p = (Player)sender;
                     if (main.sheeps.contains(args[1])) {
-                        String name = ChatColor.translateAlternateColorCodes('&',
-                                main.getConfig().getString("Sheep." + args[1] + ".name"));
+                        String name = Utils.color(main.getConfig().getString("Sheep." + args[1] + ".name"));
                         p.getInventory().addItem(Utils.getEgg(args[1]));
                         String message = config.egg_give.replace("%amount%","1").replace("%sheep%",name)
                                 .replace("%player%",sender.getName());
