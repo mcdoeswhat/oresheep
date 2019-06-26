@@ -57,8 +57,7 @@ public class Utils {
             egg = new ItemStack(Material.valueOf("SHEEP_SPAWN_EGG"));
         }
         ItemMeta meta = egg.getItemMeta();
-        String name = ChatColor.translateAlternateColorCodes('&',
-                main.getConfig().getString("Sheep."+sheep+".name"));
+        String name = color(main.getConfig().getString("Sheep."+sheep+".name"));
         meta.setDisplayName(name);
         egg.setItemMeta(meta);
         return egg;
