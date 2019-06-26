@@ -2,6 +2,7 @@ package me.albert.oresheep;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -27,8 +28,9 @@ public class OreSheepListener implements Listener {
                 e.setCancelled(true);
                 sheep.setSheared(true);
                 ItemStack itemonshear = Utils.dropOnShear( Utils.Sheepcfg(sheep.getName()));
-                e.getPlayer().getLocation().getWorld().playSound(e.getPlayer().getLocation(), Sounds.SHEEP_SHEAR.bukkitSound(),10,1);
-                e.getPlayer().getLocation().getWorld().dropItem(e.getEntity().getLocation(), itemonshear);
+                Location loc = e.getPlayer().getLocation();
+                loc.getWorld().playSound(loc, Sounds.SHEEP_SHEAR.bukkitSound(),10,1);
+                loc.getWorld().dropItem(e.getEntity().getLocation(), itemonshear);
             }
         }
     }
@@ -39,7 +41,8 @@ public class OreSheepListener implements Listener {
                 Sheep sheep = (Sheep) e.getEntity();
                 if (main.sheepnames.contains(sheep.getName())) {
                     String cfg =  Utils.Sheepcfg(sheep.getName());
-                    sheep.setColor(DyeColor.valueOf(main.getConfig().getString("Sheep." + cfg + ".color").toUpperCase()));
+                    sheep.setColor(DyeColor.valueOf(main.getConfig()
+                            .getString("Sheep." + cfg + ".color").toUpperCase()));
                 }
 
             },0L);
@@ -52,7 +55,8 @@ public class OreSheepListener implements Listener {
             server.scheduleSyncDelayedTask(main, () -> {
                 Sheep sheep = e.getEntity();
                 String cfg = Utils.Sheepcfg(sheep.getName());
-                sheep.setColor(DyeColor.valueOf(main.getConfig().getString("Sheep." + cfg + ".color").toUpperCase()));
+                sheep.setColor(DyeColor.valueOf(main.getConfig()
+                        .getString("Sheep." + cfg + ".color").toUpperCase()));
             },10L);
 
         }
