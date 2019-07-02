@@ -1,9 +1,8 @@
 package me.albert.oresheep;
 
+import com.google.common.primitives.Ints;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-
-import com.google.common.primitives.Ints;
 
 public enum Sounds {
     AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE", "AMBIENT_CAVE"),

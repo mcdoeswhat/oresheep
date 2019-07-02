@@ -13,9 +13,9 @@ import java.io.File;
 
 public class Commands implements CommandExecutor {
     private static Main main = Main.getInstance();
-    private Config config = new Config();
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Config config = new Config();
         switch (args.length){
             case 0:
                 sender.sendMessage(Utils.color("&b/oresheep get <sheep>"));
@@ -112,6 +112,7 @@ public class Commands implements CommandExecutor {
     }
 
     private void GiveSheep(CommandSender sender, String[] args, Player p, int amount) {
+        Config config = new Config();
         String name =Utils.color(main.getConfig().getString("Sheep." + args[2] + ".name"));
         ItemStack egg = Utils.getEgg(args[2]);
         egg.setAmount(amount);
